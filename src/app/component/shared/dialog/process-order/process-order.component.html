@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header">
+    {{ title }}
+  </div>
+  <div class="card-body">
+    <form [formGroup]="OrderUpdateForm">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <select formControlName="status" id="inputState" class="form-control">
+          <option value="" selected>Unpaid</option>
+          <option value="Paid">Paid</option>
+          <option value="Refunded">Refunded</option>
+          <option value="Cancel">Cancel</option>
+        </select>
+      </div>
+      <button [disabled]="!OrderUpdateForm.valid" (click)="updateOrderStatus()" class="btn btn-primary">
+        Update
+      </button>
+    </form>
+  </div>
+</div>

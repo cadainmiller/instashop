@@ -1,0 +1,166 @@
+<div
+  *ngIf="collection.data.length >= 0"
+  class="grid-position card border-light shadow"
+>
+  <div
+    class="card-header border-bottom-0 bg-white d-flex justify-content-between align-items-center px-2 py-2"
+  >
+    <div class="view-highlight">
+      <ol class="breadcrumb p-0 m-0">
+        <li class="breadcrumb-item text-muted">Showing</li>
+        <li class="breadcrumb-item" aria-current="page">Orders</li>
+      </ol>
+    </div>
+
+    <div class="d-flex align-items-center"></div>
+  </div>
+  <!-- <div class="card-body px-2 py-2">
+      <ag-grid-angular
+        #agGrid
+        style="width: 100%; height: 800px"
+        id="myGrid"
+        class="ag-theme-alpine"
+        [defaultColDef]="defaultColDef"
+        [rowData]="rowData"
+        [columnDefs]="columnDefs"
+        [rowSelection]="rowSelection"
+        [enableBrowserTooltips]="enableBrowserTooltips"
+        [pagination]="true"
+        (gridReady)="onGridReady($event)"
+        (rowClicked)="rowClicked($event.data)"
+      ></ag-grid-angular>
+    </div> -->
+  <div
+    *ngIf="collection.data.length > 0"
+    class="card-body px-2 py-2"
+    style="height: 800px"
+  >
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Status</th>
+          <th scope="col">Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Products</th>
+          <th scope="col">Street 1</th>
+          <th scope="col">Street 2</th>
+          <th scope="col">State/Parish</th>
+          <th class="" scope="col">Invoice Actions</th>
+          <th scope="col">Process Order</th>
+          <th scope="col">Last Modify</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let order of collection.data | paginate: config;
+            let i = index
+          "
+        >
+          <th scope="row">
+            <a class="text-primary" (click)="openThisOrder(order.orderId)">{{
+              order.orderId
+            }}</a>
+          </th>
+          <td>
+            <span class="badge badge-pill"
+            [class.badge-muted]="order.status === 'Unpaid'"
+            [class.badge-success]="order.status === 'Paid'"
+            [class.badge-info]="order.status === 'Refunded'"
+            [class.badge-danger]="order.status === 'Cancel'"
+            >{{
+              order.status ? order.status : "&mdash;"
+            }}</span>
+          </td>
+          <td>
+            {{
+              order.customer_info.first_name
+                ? order.customer_info.first_name
+                : "&mdash;"
+            }}
+            {{
+              order.customer_info.last_name
+                ? order.customer_info.last_name
+                : "&mdash;"
+            }}
+          </td>
+          <td>
+            {{
+              order.customer_info.email ? order.customer_info.email : "&mdash;"
+            }}
+          </td>
+          <td>
+            {{ order.products.name ? order.products.productId : "&mdash;" }}
+          </td>
+          <td>
+            {{
+              order.shipping_address.street
+                ? order.shipping_address.street
+                : "&mdash;"
+            }}
+          </td>
+          <td>
+            {{
+              order.shipping_address.street2
+                ? order.shipping_address.street2
+                : "&mdash;"
+            }}
+          </td>
+          <td>
+            {{
+              order.shipping_address.parish
+                ? order.shipping_address.parish
+                : "&mdash;"
+            }}
+          </td>
+          <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button
+                type="button"
+                [disabled]="order.hasInvoice"
+                (click)="sendInvoice(order)"
+                class="btn btn-sm"
+                [class.btn-primary]="!order.hasInvoice"
+                [class.btn-secondary]="order.hasInvoice"
+              >
+                Create Invoice
+              </button>
+              <button
+                type="button"
+                [disabled]="!order.hasInvoice"
+                (click)="viewInvoice(order.orderId)"
+                class="btn btn-sm"
+                [class.btn-primary]="order.hasInvoice"
+                [class.btn-secondary]="!order.hasInvoice"
+              >
+                View Invoice
+              </button>
+            </div>
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm ml-2"
+              (click)="openUpdateOrder(order.orderId)"
+            >
+              Update Status
+            </button>
+          </td>
+          <td>{{ order.updatedAt | date: "M/d/yy, h:mm a" }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <pagination-controls
+      (pageChange)="pageChanged($event)"
+    ></pagination-controls>
+  </div>
+  <div
+    *ngIf="collection.data.length <= 0"
+    class="alert alert-primary"
+    role="alert"
+  >
+    There are on orders...
+  </div>
+</div>
